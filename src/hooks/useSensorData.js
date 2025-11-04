@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 
+const API_URL = 'http://localhost:5000/api/sensor-data';
+
 export const useSensorData = () => {
   const [sensorData, setSensorData] = useState({
-    temperature: 22.5,        // Moderate risk (20-25°C range)
-    dissolvedOxygen: 3.8,     // Moderate risk (2-5 mg/L range)
-    ph: 8.7,                  // Moderate risk (8.5-9 range)
-    electricalConductivity: 850,  // Moderate risk (800-1000 µS/cm range)
-    turbidity: 35.2           // Moderate risk (10-50 NTU range)
+    temperature: 22.5,
+    dissolvedOxygen: 3.8,
+    ph: 8.7,
+    electricalConductivity: 850,
+    turbidity: 35.2
   });
 
   const [dataHistory, setDataHistory] = useState({
@@ -19,6 +21,88 @@ export const useSensorData = () => {
 
   const [isConnected, setIsConnected] = useState(true);
   const intervalRef = useRef();
+
+  // Function to log data to MongoDB
+  const logDataToDatabase = async (data, riskLevel) => {
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          temperature: data.temperature,
+          dissolvedOxygen: data.dissolvedOxygen,
+          ph: data.ph,
+          electricalConductivity: data.electricalConductivity,
+          turbidity: data.turbidity,
+          riskLevel: riskLevel
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to log data to database');
+      }
+    } catch (error) {
+      console.error('Error logging data:', error);
+      setIsConnected(false);
+    }
+  };
+
+  // Function to fetch historical data from MongoDB
+  const fetchHistoricalData = async () => {
+    try {
+      const response = await fetch(`${API_URL}?limit=20`);
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (data.length > 0) {
+          const history = {
+            temperature: [],
+            dissolvedOxygen: [],
+            ph: [],
+            electricalConductivity: [],
+            turbidity: []
+          };
+
+          data.reverse().forEach(entry => {
+            history.temperature.push(entry.temperature);
+            history.dissolvedOxygen.push(entry.dissolvedOxygen);
+            history.ph.push(entry.ph);
+            history.electricalConductivity.push(entry.electricalConductivity);
+            history.turbidity.push(entry.turbidity);
+          });
+
+          setDataHistory(history);
+          
+          // Set the latest data as current
+          const latest = data[data.length - 1];
+          setSensorData({
+            temperature: latest.temperature,
+            dissolvedOxygen: latest.dissolvedOxygen,
+            ph: latest.ph,
+            electricalConductivity: latest.electricalConductivity,
+            turbidity: latest.turbidity
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching historical data:', error);
+      // If database is not available, use simulated data
+      initializeSimulatedHistory();
+    }
+  };
+
+  // Initialize simulated data history
+  const initializeSimulatedHistory = () => {
+    const initialHistory = {};
+    Object.keys(sensorData).forEach(key => {
+      initialHistory[key] = Array.from({ length: 20 }, () => 
+        generateRealisticValue(key, sensorData[key])
+      );
+    });
+    setDataHistory(initialHistory);
+  };
 
   // Generate realistic sensor data variations with occasional risk conditions
   const generateRealisticValue = (parameter, currentValue) => {
@@ -54,15 +138,9 @@ export const useSensorData = () => {
     );
   };
 
-  // Initialize data history
+  // Initialize data on mount
   useEffect(() => {
-    const initialHistory = {};
-    Object.keys(sensorData).forEach(key => {
-      initialHistory[key] = Array.from({ length: 20 }, () => 
-        generateRealisticValue(key, sensorData[key])
-      );
-    });
-    setDataHistory(initialHistory);
+    fetchHistoricalData();
   }, []);
 
   // Start real-time data simulation
@@ -103,6 +181,8 @@ export const useSensorData = () => {
   return {
     sensorData,
     dataHistory,
-    isConnected
+    isConnected,
+    logDataToDatabase,
+    fetchHistoricalData
   };
 };

@@ -9,8 +9,15 @@ import { exportData } from './utils/dataExport';
 import './styles/App.css';
 
 const App = () => {
-  const { sensorData, dataHistory, isConnected } = useSensorData();
+  const { sensorData, dataHistory, isConnected, logDataToDatabase } = useSensorData();
   const { riskLevels, overallRisk } = useRiskAssessment(sensorData);
+
+  // Log data to database whenever sensor data or risk level changes
+  useEffect(() => {
+    if (sensorData && overallRisk) {
+      logDataToDatabase(sensorData, overallRisk);
+    }
+  }, [sensorData, overallRisk]);
 
   const handleExportData = () => {
     exportData(sensorData, dataHistory, riskLevels);

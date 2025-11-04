@@ -422,60 +422,371 @@
   font-size: 0.9rem;
 }
 
-/* Responsive Design */
+/* Mobile-First Responsive Design */
 @media (max-width: 768px) {
   .container {
-    padding: 15px;
+    padding: 10px;
   }
   
   .title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
   }
   
   .parameter-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 15px;
   }
   
   .parameter-card {
-    padding: 20px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .card-header h3 {
+    font-size: 1.1rem;
   }
   
   .value {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+  }
+  
+  .unit {
+    font-size: 0.9rem;
+  }
+  
+  .risk-level {
+    font-size: 0.8rem;
+    padding: 4px 8px;
   }
   
   .footer-content {
     flex-direction: column;
     text-align: center;
+    gap: 15px;
+  }
+  
+  .btn-export {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 8px;
+  }
+  
   .title {
-    font-size: 2rem;
+    font-size: 1.8rem;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+  }
+  
+  .title-icon {
+    width: 32px;
+    height: 32px;
   }
   
   .subtitle {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
   }
   
   .parameter-card {
-    padding: 15px;
+    padding: 12px;
+    border-radius: 12px;
+  }
+  
+  .card-header h3 {
+    font-size: 1rem;
   }
   
   .value {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+  
+  .unit {
+    font-size: 0.8rem;
   }
   
   .risk-parameters {
     grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .risk-param {
+    padding: 8px;
+    font-size: 0.8rem;
   }
   
   .gauge-circle svg {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
+  }
+  
+  .gauge-value-text {
+    font-size: 20px;
+  }
+  
+  .gauge-unit-text {
+    font-size: 10px;
+  }
+  
+  /* Mobile chart adjustments */
+  .chart-container {
+    height: 200px !important;
+  }
+}
+
+/* Ultra-small screens (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .parameter-card {
+    padding: 10px;
+  }
+  
+  .value {
+    font-size: 1.6rem;
+  }
+  
+  .gauge-circle svg {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Location Map Component Styles */
+.location-map-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 25px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  grid-column: 1 / -1;
+}
+
+.location-map-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4dd0e1, #00d4ff);
+  border-radius: 20px 20px 0 0;
+}
+
+.location-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.coordinate-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.coordinate {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(77, 208, 225, 0.2);
+}
+
+.coordinate .label {
+  font-size: 0.9rem;
+  color: #90a4ae;
+  font-weight: 500;
+}
+
+.coordinate .value {
+  font-size: 1.2rem;
+  color: #4dd0e1;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.location-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.detail-item .label {
+  font-size: 0.85rem;
+  color: #90a4ae;
+  font-weight: 500;
+}
+
+.detail-item .value {
+  font-size: 1rem;
+  color: #b0bec5;
+  font-weight: 500;
+}
+
+.map-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-view-map {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 25px;
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.btn-view-map:hover {
+  background: rgba(76, 175, 80, 0.3);
+  transform: translateY(-2px);
+}
+
+.location-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 40px 20px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(77, 208, 225, 0.1);
+  border-top: 3px solid #4dd0e1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.location-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.location-error p {
+  color: #f44336;
+  font-size: 1rem;
+}
+
+.btn-location-retry {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-location-retry:hover {
+  background: rgba(244, 67, 54, 0.3);
+}
+
+.location-history {
+  margin-top: 15px;
+}
+
+.location-history h4 {
+  font-size: 1rem;
+  color: #b0bec5;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.history-item .coords {
+  color: #4dd0e1;
+  font-family: 'Courier New', monospace;
+}
+
+.history-item .time {
+  color: #90a4ae;
+}
+
+/* Mobile adjustments for location map */
+@media (max-width: 768px) {
+  .coordinate-pair {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .location-details {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .coordinate .value {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .location-map-card {
+    padding: 15px;
+  }
+  
+  .coordinate .value {
+    font-size: 0.9rem;
+  }
+  
+  .btn-view-map {
+    width: 100%;
+    justify-content: center;
   }
 }

@@ -37,7 +37,9 @@ module.exports = {
     },
     compress: true,
     port: 3000,
+    host: '0.0.0.0', // Allow external access
     hot: true,
+    allowedHosts: 'all', // Allow access from any host
   },
   resolve: {
     extensions: ['.js', '.jsx'],
